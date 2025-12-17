@@ -1,0 +1,6 @@
+@echo off
+echo Clearing Vite cache...
+if exist node_modules\.vite rmdir /s /q node_modules\.vite
+
+echo Starting CIDCO Mitra Website...
+npm run dev
