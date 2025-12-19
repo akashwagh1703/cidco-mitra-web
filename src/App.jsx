@@ -79,7 +79,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <ThemeProvider>
             <LanguageProvider>
-              <BrowserRouter>
+              <BrowserRouter basename="/cidco-mitra-web">
                 <AppContent />
               </BrowserRouter>
             </LanguageProvider>
