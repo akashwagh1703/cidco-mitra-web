@@ -1,12 +1,35 @@
+import { useState, useEffect } from 'react'
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { useSettings } from '../hooks/useSettings'
+import { publicService } from '../services/publicService'
 
 export default function Footer() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const { settings } = useSettings()
+  const [services, setServices] = useState([])
   const currentYear = new Date().getFullYear()
+
+  useEffect(() => {
+    fetchServices()
+  }, [])
+
+  const fetchServices = async () => {
+    try {
+      const response = await publicService.getServices()
+      if (response.success) {
+        setServices(response.data.filter(s => s.status).slice(0, 6))
+      }
+    } catch (error) {
+      console.error('Failed to fetch services:', error)
+    }
+  }
+
+  const getText = (field) => {
+    if (!field) return ''
+    return field[language] || field.en || field
+  }
 
   const footerLinks = {
     company: [
@@ -14,12 +37,6 @@ export default function Footer() {
       { name: t('nav.services'), href: '/services' },
       { name: t('nav.contact'), href: '/contact' },
       { name: t('nav.home'), href: '/' },
-    ],
-    services: [
-      { name: t('services.items.0.title'), href: '/services' },
-      { name: t('services.items.1.title'), href: '/services' },
-      { name: t('services.items.2.title'), href: '/services' },
-      { name: t('services.items.3.title'), href: '/services' },
     ],
     legal: [
       { name: 'Privacy Policy', href: '/privacy-policy' },
@@ -87,13 +104,13 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-4">{t('footer.services')}</h4>
             <ul className="space-y-2">
-              {footerLinks.services.map((link) => (
-                <li key={link.name}>
+              {services.map((service) => (
+                <li key={service.id}>
                   <Link
-                    to={link.href}
+                    to={`/services/${service.id}`}
                     className="text-gray-400 dark:text-gray-500 hover:text-white transition-colors"
                   >
-                    {link.name}
+                    {getText(service.title)}
                   </Link>
                 </li>
               ))}

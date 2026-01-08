@@ -81,9 +81,15 @@ export default function Services() {
                 {service.displayDescription}
               </p>
               {service.id && (
-                <div className="flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:gap-2 transition-all">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    navigate(`/services/${service.id}`)
+                  }}
+                  className="flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:gap-2 transition-all"
+                >
                   Learn More <ArrowRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
-                </div>
+                </button>
               )}
             </div>
           ))}

@@ -1,4 +1,5 @@
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { useSettings } from '../hooks/useSettings'
 import { useState, useEffect } from 'react'
@@ -6,6 +7,7 @@ import { useState, useEffect } from 'react'
 export default function Hero() {
   const { t } = useLanguage()
   const { settings } = useSettings()
+  const navigate = useNavigate()
   const content = {
     title: settings.homepage.hero_title || t('hero.title'),
     subtitle: settings.homepage.hero_subtitle || t('hero.subtitle'),
@@ -87,19 +89,19 @@ export default function Hero() {
                   {slide.subtitle}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a
-                    href={content.ctaLink}
+                  <button
+                    onClick={() => navigate(content.ctaLink)}
                     className="inline-flex items-center justify-center bg-primary-600 text-white px-8 py-4 rounded-lg hover:bg-primary-700 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 font-semibold group"
                   >
                     {content.ctaText}
                     <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-                  </a>
-                  <a
-                    href="#about"
+                  </button>
+                  <button
+                    onClick={() => navigate('/about')}
                     className="inline-flex items-center justify-center bg-white/20 backdrop-blur-sm border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-primary-600 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 font-semibold"
                   >
                     {t('hero.learnMore')}
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>

@@ -18,7 +18,7 @@ export default function ServicesPage() {
     try {
       const response = await publicService.getServices()
       if (response.success) {
-        setServices(response.data.filter(s => s.is_active))
+        setServices(response.data.filter(s => s.status))
       }
     } catch (error) {
       console.error('Failed to fetch services:', error)
@@ -66,10 +66,10 @@ export default function ServicesPage() {
                   <Building2 className="text-white" size={32} />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">
-                  {service.name}
+                  {getText(service.title)}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4 line-clamp-3">
-                  {service.description}
+                  {getText(service.description)}
                 </p>
                 <button className="flex items-center gap-2 text-primary-600 dark:text-primary-400 font-medium hover:gap-3 transition-all">
                   <Calendar size={18} />
