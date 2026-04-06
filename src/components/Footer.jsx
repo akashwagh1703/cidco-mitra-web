@@ -56,8 +56,8 @@ export default function Footer() {
         <div className="hidden md:grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="mb-4">
-              <h3 className="text-2xl font-bold mb-1">सिडकोमित्र</h3>
-              <h4 className="text-xl font-bold text-primary">C.I.D.C.O. Mitra</h4>
+              <h3 className="text-2xl font-bold mb-1">C.I.D.C.O. Mitra</h3>
+              {/* <h4 className="text-xl font-bold text-primary">C.I.D.C.O. Mitra</h4> */}
             </div>
             <p className="text-gray-400">{t('footer.description')}</p>
           </div>
