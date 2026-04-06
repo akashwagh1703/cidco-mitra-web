@@ -29,11 +29,11 @@ export default function Hero() {
         {/* CIDCO Mitra Logo/Title */}
         <div className="mb-6">
           <h1 className="text-6xl md:text-7xl font-bold mb-2 tracking-tight">
-            सिडकोमित्र
-          </h1>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
             C.I.D.C.O. MITRA
-          </h2>
+          </h1>
+          {/* <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            C.I.D.C.O. MITRA
+          </h2> */}
         </div>
 
         {/* Tagline */}

@@ -3,12 +3,14 @@
     "home": "Home",
     "services": "Services",
     "about": "About",
-    "contact": "Contact"
+    "contact": "Contact",
+    "disclaimerTitle": "Disclaimer",
+    "disclaimer": "(www.cidcomitra.com) is an independent and private consultancy firm. We have no direct or official affiliation with the CIDCO Corporation or any government entity. We provide technical advice and assistance solely regarding the documentation and legal procedures related to CIDCO properties."
   },
   "hero": {
     "title": "Welcome to C.I.D.C.O. Mitra",
     "subtitle": "Your trusted partner for government services",
-    "tagline": "C.I.D.C.O. Transfer Services Fast and Easy",
+    "tagline": "CIDCO's Transfer Services Fast and Easy",
     "getStarted": "Get Started",
     "learnMore": "Learn More",
     "contactUs": "Contact Us"
