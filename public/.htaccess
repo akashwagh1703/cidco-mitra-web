@@ -1,18 +1,8 @@
-RewriteEngine On
-RewriteBase /cidco-mitra-web/
-
-# Handle React Router - redirect all requests to index.html
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /cidco-mitra-web/index.html [L]
-
-# Security headers
-Header always set X-Content-Type-Options nosniff
-Header always set X-Frame-Options DENY
-Header always set X-XSS-Protection "1; mode=block"
-
-# Cache static assets
-<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
-    ExpiresActive On
-    ExpiresDefault "access plus 1 month"
-</FilesMatch>
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

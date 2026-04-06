@@ -1,0 +1,6 @@
+# CIDCO Mitra - Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://cidcomitra.com/cidco-mitra-web/sitemap.xml

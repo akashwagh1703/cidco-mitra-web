@@ -1,16 +1,21 @@
 import Hero from '../components/Hero'
-import About from '../components/About'
 import Services from '../components/Services'
-import Features from '../components/Features'
 import Contact from '../components/Contact'
+import SEO from '../components/SEO'
+import { useLanguage } from '../context/LanguageContext'
 
 export default function Home() {
+  const { t } = useLanguage()
+  
   return (
     <>
+      <SEO 
+        title={t('seo.homeTitle')}
+        description={t('seo.homeDescription')}
+        keywords="CIDCO, Mitra, Government Services, Navi Mumbai, Transfer Services"
+      />
       <Hero />
       <Services />
-      <About />
-      <Features />
       <Contact />
     </>
   )

@@ -1,38 +1,35 @@
-import { Home, ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { Home, Search } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 
 export default function NotFound() {
   const { t } = useLanguage()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 transition-colors duration-300">
-      <div className="text-center">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 px-4">
+      <div className="text-center max-w-lg">
         <div className="mb-8">
-          <h1 className="text-9xl font-bold text-primary-600 dark:text-primary-400 mb-4">404</h1>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Page Not Found
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto">
-            The page you're looking for doesn't exist or has been moved.
-          </p>
+          <h1 className="text-9xl font-bold text-primary mb-4">404</h1>
+          <Search className="w-20 h-20 text-gray-400 mx-auto mb-4" />
         </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <h2 className="text-3xl font-bold mb-4">{t('notFound.title')}</h2>
+        <p className="text-gray-600 dark:text-gray-400 text-lg mb-8">
+          {t('notFound.message')}
+        </p>
+        <div className="flex gap-4 justify-center">
           <Link
             to="/"
-            className="inline-flex items-center justify-center bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-3 rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 font-medium"
+            className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 transition"
           >
-            <Home size={20} className="mr-2" />
-            Go Home
+            <Home size={20} />
+            {t('notFound.goHome')}
           </Link>
-          <button
-            onClick={() => window.history.back()}
-            className="inline-flex items-center justify-center border-2 border-primary-600 dark:border-primary-500 text-primary-700 dark:text-primary-400 px-6 py-3 rounded-lg hover:bg-primary-600 dark:hover:bg-primary-600 hover:text-white hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 font-medium"
+          <Link
+            to="/services"
+            className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-8 py-3 rounded-lg font-semibold transition"
           >
-            <ArrowLeft size={20} className="mr-2" />
-            Go Back
-          </button>
+            {t('notFound.viewServices')}
+          </Link>
         </div>
       </div>
     </div>

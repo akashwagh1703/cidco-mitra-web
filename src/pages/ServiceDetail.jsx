@@ -1,15 +1,23 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Phone, MessageCircle, Calendar, FileText, Clock, DollarSign, Info } from 'lucide-react'
-import { publicService } from '../services/publicService'
+import { useParams, Link } from 'react-router-dom'
+import {
+  ArrowLeft,
+  Loader,
+  MessageCircle,
+  Phone,
+  Clock,
+  FileText,
+  DollarSign,
+  Calendar,
+  CheckCircle2
+} from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import { publicService } from '../services/publicService'
 import AppointmentBooking from '../components/AppointmentBooking'
-import ScheduleViewer from '../components/ScheduleViewer'
 
 export default function ServiceDetail() {
   const { id } = useParams()
-  const navigate = useNavigate()
-  const { language } = useLanguage()
+  const { t, language } = useLanguage()
   const [service, setService] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showBooking, setShowBooking] = useState(false)
@@ -21,162 +29,254 @@ export default function ServiceDetail() {
   const fetchService = async () => {
     try {
       const response = await publicService.getServices()
-      if (response.success) {
-        const found = response.data.find(s => s.id === parseInt(id))
-        setService(found)
-      }
+      const found = response.data?.find(s => s.id === parseInt(id))
+      setService(found)
     } catch (error) {
-      console.error('Failed to fetch service:', error)
+      console.error('Error fetching service:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  const getText = (field) => {
-    if (!field) return ''
-    return field[language] || field.en || field
+  const getLocalizedText = (item, field) => {
+    if (!item) return ''
+    const localized = item?.[`${field}_${language}`] || item?.[field]
+    if (typeof localized === 'object' && localized !== null) {
+      return localized[language] || localized.en || ''
+    }
+    return localized || ''
   }
 
-  const handleCall = () => {
-    if (service?.phone) window.location.href = `tel:${service.phone}`
-  }
-
-  const handleWhatsApp = () => {
-    if (service?.whatsapp) window.open(`https://wa.me/${service.whatsapp.replace(/[^0-9]/g, '')}`, '_blank')
-  }
-
-  const handleAppointment = (e) => {
-    e.preventDefault()
-    // Always open modal on service detail page
-    setShowBooking(true)
+  const handleWhatsAppClick = () => {
+    const whatsappNumber = service.whatsapp || service.phone || '8828422213'
+    const message = encodeURIComponent(
+      `Hello, I would like to inquire about ${getLocalizedText(service, 'title')} service.`
+    )
+    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank')
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+        <Loader className="animate-spin text-primary" size={40} />
       </div>
     )
   }
 
   if (!service) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Service Not Found</h2>
-          <button onClick={() => navigate('/')} className="text-primary-600 hover:underline">Go Back</button>
+          <h2 className="text-2xl font-bold mb-4">{t('serviceDetail.notFound')}</h2>
+          <Link to="/services" className="text-primary hover:underline">
+            {t('serviceDetail.backToServices')}
+          </Link>
         </div>
       </div>
     )
   }
 
+  const renderDocuments = () => {
+    const documents = service.documents
+    if (!documents) return []
+
+    let docList = []
+    if (typeof documents === 'string') {
+      try {
+        const parsed = JSON.parse(documents)
+        if (Array.isArray(parsed)) {
+          docList = parsed
+        } else if (typeof parsed === 'object') {
+          docList = parsed[language] || parsed.en || []
+        }
+      } catch {
+        docList = documents.split(',').map(d => d.trim()).filter(d => d)
+      }
+    } else if (Array.isArray(documents)) {
+      docList = documents
+    } else if (typeof documents === 'object' && documents !== null) {
+      const localizedDocs = documents[language] || documents.en || documents
+      if (Array.isArray(localizedDocs)) {
+        docList = localizedDocs
+      } else if (typeof localizedDocs === 'string') {
+        docList = localizedDocs.split(',').map(d => d.trim()).filter(d => d)
+      }
+    }
+
+    // Ensure we always return an array
+    return Array.isArray(docList) ? docList : []
+  }
+
+  // Get documents list once
+  const documentsList = renderDocuments()
+
   return (
-    <div className="pt-20 pb-16 bg-gray-50 dark:bg-gray-900 min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <button onClick={() => navigate('/')} className="flex items-center text-primary-600 dark:text-primary-400 hover:underline mb-6">
-          <ArrowLeft size={20} className="mr-2" />
-          Back to Home
-        </button>
+    <div className="min-h-screen py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <Link
+          to="/services"
+          className="inline-flex items-center gap-2 text-primary hover:text-primary/80 mb-8 font-semibold"
+        >
+          <ArrowLeft size={20} />
+          {t('serviceDetail.backToServices')}
+        </Link>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{getText(service.title)}</h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-8">{getText(service.description)}</p>
-
-          {getText(service.overview) && (
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <Info className="text-primary-600" size={20} />
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Overview</h2>
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8 mb-6">
+              {/* Service Header */}
+              <div className="flex items-start gap-6 mb-6">
+                {service.icon_url && (
+                  <img
+                    src={service.icon_url}
+                    alt={getLocalizedText(service, 'title')}
+                    className="w-20 h-20 rounded-lg"
+                  />
+                )}
+                <div className="flex-1">
+                  <h1 className="text-3xl md:text-4xl font-bold mb-3 text-gray-800 dark:text-white">
+                    {getLocalizedText(service, 'title')}
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400 text-lg">
+                    {getLocalizedText(service, 'description')}
+                  </p>
+                </div>
               </div>
-              <p className="text-gray-600 dark:text-gray-300 whitespace-pre-line">{getText(service.overview)}</p>
-            </div>
-          )}
 
-          {getText(service.pricing) && (
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <DollarSign className="text-primary-600" size={20} />
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Pricing</h2>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 whitespace-pre-line">{getText(service.pricing)}</p>
-            </div>
-          )}
+              {/* Overview */}
+              {service.overview && (
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-gray-800 dark:text-white">
+                    <FileText size={24} className="text-primary" />
+                    {t('serviceDetail.overview')}
+                  </h2>
+                  <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
+                    {getLocalizedText(service, 'overview')}
+                  </div>
+                </div>
+              )}
 
-          {getText(service.documents) && (
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <FileText className="text-primary-600" size={20} />
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Required Documents</h2>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 whitespace-pre-line">{getText(service.documents)}</p>
-            </div>
-          )}
+              {/* Required Documents */}
+              {documentsList && documentsList.length > 0 && (
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-gray-800 dark:text-white">
+                    <FileText size={24} className="text-primary" />
+                    {t('serviceDetail.requiredDocuments')}
+                  </h2>
+                  <ul className="space-y-3">
+                    {documentsList.map((doc, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <CheckCircle2 size={20} className="text-accent mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700 dark:text-gray-300">{doc}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-          {getText(service.timeline) && (
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <Clock className="text-primary-600" size={20} />
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Process Timeline</h2>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 whitespace-pre-line">{getText(service.timeline)}</p>
-            </div>
-          )}
+              {/* Timeline */}
+              {service.timeline && (
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-gray-800 dark:text-white">
+                    <Clock size={24} className="text-primary" />
+                    {t('serviceDetail.processingTime')}
+                  </h2>
+                  <p className="text-gray-700 dark:text-gray-300 text-lg">
+                    {getLocalizedText(service, 'timeline')}
+                  </p>
+                </div>
+              )}
 
-          {/* Schedule & Appointment Section */}
-          <div className="mb-8 bg-gradient-to-r from-primary-50 to-blue-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-primary-200 dark:border-gray-600">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                {language === 'en' ? 'Schedule & Appointments' : language === 'mr' ? 'वेळापत्रक आणि भेटी' : 'शेड्यूल और अपॉइंटमेंट'}
-              </h2>
-              <button 
-                onClick={handleAppointment}
-                className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium"
-              >
-                <Calendar size={16} />
-                {language === 'en' ? 'Book Now' : language === 'mr' ? 'आता बुक करा' : 'अभी बुक करें'}
-              </button>
+              {/* Pricing */}
+              {service.pricing && getLocalizedText(service, 'pricing') && (
+                <div className="bg-blue-50 dark:bg-gray-800 rounded-lg p-6">
+                  <h2 className="text-2xl font-bold mb-3 flex items-center gap-2 text-gray-800 dark:text-white">
+                    <DollarSign size={24} className="text-primary" />
+                    {t('serviceDetail.pricing')}
+                  </h2>
+                  <p className="text-gray-700 dark:text-gray-300 text-lg">
+                    {getLocalizedText(service, 'pricing')}
+                  </p>
+                </div>
+              )}
             </div>
-            <ScheduleViewer serviceId={service.id} />
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-4 flex items-center gap-2">
-              <Info size={14} />
-              {language === 'en' ? 'Click "Book Now" to select a specific date and time slot' : 
-               language === 'mr' ? 'विशिष्ट तारीख आणि वेळ निवडण्यासाठी "आता बुक करा" वर क्लिक करा' : 
-               'विशिष्ट तिथि और समय स्लॉट चुनने के लिए "अभी बुक करें" पर क्लिक करें'}
-            </p>
           </div>
 
-          <div className="border-t pt-8">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              {language === 'en' ? 'Get Expert Assistance' : language === 'mr' ? 'तज्ञ सहाय्य मिळवा' : 'विशेषज्ञ सहायता प्राप्त करें'}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {service.phone && (
-                <button onClick={handleCall} className="flex items-center justify-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors">
-                  <Phone size={20} />
-                  Call Now
-                </button>
-              )}
-              {service.whatsapp && (
-                <button onClick={handleWhatsApp} className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+          {/* Sidebar - Contact & Booking */}
+          <div className="lg:col-span-1">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 sticky top-24">
+              <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-white">
+                {t('serviceDetail.getStarted')}
+              </h3>
+
+              {/* WhatsApp Contact */}
+              {(service.whatsapp || service.phone) && (
+                <button
+                  onClick={handleWhatsAppClick}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-lg font-semibold flex items-center justify-center gap-3 transition mb-4 shadow-lg hover:shadow-xl"
+                >
                   <MessageCircle size={20} />
-                  WhatsApp
+                  {t('serviceDetail.contactWhatsApp')}
                 </button>
               )}
-              <button onClick={handleAppointment} className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+
+              {/* Phone Contact */}
+              {service.phone && (
+                <a
+                  href={`tel:${service.phone}`}
+                  className="w-full bg-primary hover:bg-primary/90 text-white px-6 py-4 rounded-lg font-semibold flex items-center justify-center gap-3 transition mb-4 shadow-lg hover:shadow-xl"
+                >
+                  <Phone size={20} />
+                  {t('serviceDetail.callNow')}
+                </a>
+              )}
+
+              {/* Book Appointment Button */}
+              <button
+                onClick={() => setShowBooking(!showBooking)}
+                className="w-full bg-secondary hover:bg-secondary/90 text-white px-6 py-4 rounded-lg font-semibold flex items-center justify-center gap-3 transition shadow-lg hover:shadow-xl"
+              >
                 <Calendar size={20} />
-                {language === 'en' ? 'Book Appointment' : language === 'mr' ? 'भेट बुक करा' : 'अपॉइंटमेंट बुक करें'}
+                {t('serviceDetail.bookAppointment')}
               </button>
+
+              {/* Contact Numbers Display */}
+              {(service.whatsapp || service.phone) && (
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    {t('serviceDetail.contactInfo')}
+                  </p>
+                  {service.phone && (
+                    <div className="flex items-center gap-2 mb-2">
+                      <Phone size={16} className="text-primary" />
+                      <span className="text-gray-800 dark:text-white font-semibold">
+                        {service.phone}
+                      </span>
+                    </div>
+                  )}
+                  {service.whatsapp && service.whatsapp !== service.phone && (
+                    <div className="flex items-center gap-2">
+                      <MessageCircle size={16} className="text-green-600" />
+                      <span className="text-gray-800 dark:text-white font-semibold">
+                        {service.whatsapp}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </div>
 
-      {showBooking && (
-        <AppointmentBooking
-          service={service}
-          onClose={() => setShowBooking(false)}
-        />
-      )}
+        {/* Appointment Booking Modal */}
+        {showBooking && (
+          <AppointmentBooking
+            service={service}
+            onClose={() => setShowBooking(false)}
+          />
+        )}
+      </div>
     </div>
   )
 }

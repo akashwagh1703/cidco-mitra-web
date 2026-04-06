@@ -1,248 +1,207 @@
-import { useState } from 'react'
-import { Mail, Phone, MapPin, Send } from 'lucide-react'
-import { publicService } from '../services/publicService'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useLanguage } from '../context/LanguageContext'
-import { useSettings } from '../hooks/useSettings'
+import { publicService } from '../services/publicService'
+import { Send, Loader, MapPin, Phone, Mail, Clock, CheckCircle } from 'lucide-react'
 
 export default function Contact() {
   const { t } = useLanguage()
-  const { settings } = useSettings()
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-  })
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState('')
-  const [errors, setErrors] = useState({})
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-    if (errors[e.target.name]) {
-      setErrors({ ...errors, [e.target.name]: '' })
-    }
-  }
-
-  const validate = () => {
-    const newErrors = {}
-    
-    if (!formData.name || !formData.name.trim()) {
-      newErrors.name = 'Name is required'
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters'
-    }
-    
-    if (!formData.email || !formData.email.trim()) {
-      newErrors.email = 'Email is required'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address'
-    }
-    
-    if (formData.phone && !/^[+]?[0-9]{10,15}$/.test(formData.phone.replace(/[\s-]/g, ''))) {
-      newErrors.phone = 'Please enter a valid phone number'
-    }
-    
-    if (!formData.message || !formData.message.trim()) {
-      newErrors.message = 'Message is required'
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters'
-    }
-    
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
-    
-    if (!validate()) return
-    
-    setLoading(true)
-    
+  const onSubmit = async (data) => {
     try {
-      const response = await publicService.submitContact(formData)
-      if (response.success) {
-        setSuccess(true)
-        setFormData({ name: '', email: '', phone: '', message: '' })
-        setErrors({})
-        setTimeout(() => setSuccess(false), 5000)
-      } else {
-        setError(response.message || 'Failed to send message. Please try again.')
-      }
-    } catch (err) {
-      console.error('Failed to submit:', err)
-      setError(err.response?.data?.message || 'Failed to send message. Please check your connection and try again.')
-    } finally {
-      setLoading(false)
+      await publicService.submitLead(data)
+      toast.success(t('contact.success'))
+      reset()
+    } catch (error) {
+      toast.error(t('contact.error'))
     }
   }
 
-  const contactInfo = [
+  const contactDetails = [
+    {
+      icon: MapPin,
+      title: t('contact.address'),
+      value: 'Shop No. 34A, First Floor, Prabhat Center, Sector-1A, CBD Belapur, Navi Mumbai 400614',
+      link: null
+    },
     {
       icon: Phone,
       title: t('contact.phone'),
-      value: settings.general.contact_phone,
-      link: `tel:${settings.general.contact_phone.replace(/\s/g, '')}`,
+      value: '8828422213',
+      link: 'tel:8828422213'
     },
     {
       icon: Mail,
       title: t('contact.email'),
-      value: settings.general.contact_email,
-      link: `mailto:${settings.general.contact_email}`,
+      value: 'cidcomitra@gmail.com',
+      link: 'mailto:cidcomitra@gmail.com'
     },
     {
-      icon: MapPin,
-      title: t('contact.address'),
-      value: settings.general.address,
-      link: '#',
-    },
+      icon: Clock,
+      title: t('contact.hours'),
+      value: t('contact.hoursValue'),
+      link: null
+    }
   ]
 
   return (
-    <section id="contact" className="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 animate-fade-in-up">
-          <span className="text-primary-600 dark:text-primary-400 font-semibold text-sm uppercase tracking-wider">{t('contact.label')}</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 mt-2">
-            {t('contact.title')}
-          </h2>
-          <p className="text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+    <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-block bg-primary/10 rounded-lg px-6 py-2 mb-4">
+            <p className="text-primary font-semibold text-sm uppercase tracking-wide">
+              {t('contact.getInTouch')}
+            </p>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">{t('contact.title')}</h2>
+          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
             {t('contact.subtitle')}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Contact Info */}
-          <div className="animate-slide-in-left">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-5">
-              {t('contact.info')}
-            </h3>
-            <div className="space-y-4">
-              {contactInfo.map((info, index) => (
-                <a
-                  key={index}
-                  href={info.link}
-                  className="group flex items-start space-x-4 p-4 rounded-lg bg-white dark:bg-gray-800 hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-300 border border-gray-100 dark:border-gray-700"
-                >
-                  <div className="flex-shrink-0">
-                    <div className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg shadow-md group-hover:scale-110 transition-transform">
-                      <info.icon className="text-white" size={20} />
+        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+          {/* Contact Information */}
+          <div>
+            <div className="bg-gradient-to-br from-primary to-secondary rounded-2xl p-8 text-white mb-8 shadow-xl">
+              <h3 className="text-2xl font-bold mb-6">{t('contact.contactInfo')}</h3>
+              <div className="space-y-6">
+                {contactDetails.map((detail, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 flex-shrink-0">
+                      <detail.icon size={24} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1">{detail.title}</h4>
+                      {detail.link ? (
+                        <a
+                          href={detail.link}
+                          className="text-white/90 hover:text-white transition"
+                        >
+                          {detail.value}
+                        </a>
+                      ) : (
+                        <p className="text-white/90">{detail.value}</p>
+                      )}
                     </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-1 text-sm">{info.title}</h4>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">{info.value}</p>
-                  </div>
-                </a>
-              ))}
+                ))}
+              </div>
             </div>
 
-            <div className="mt-6 p-5 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-800 dark:to-gray-700 rounded-xl border border-primary-100 dark:border-gray-700">
-              <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-sm">{t('contact.officeHours')}</h4>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">{t('contact.hours.weekday')}</p>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">{t('contact.hours.saturday')}</p>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">{t('contact.hours.sunday')}</p>
+            {/* Map or Additional Info */}
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg">
+              <h3 className="text-xl font-bold mb-4">{t('contact.whyContactUs')}</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="text-accent mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700 dark:text-gray-300">{t('contact.reason1')}</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="text-accent mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700 dark:text-gray-300">{t('contact.reason2')}</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="text-accent mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700 dark:text-gray-300">{t('contact.reason3')}</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle size={20} className="text-accent mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700 dark:text-gray-300">{t('contact.reason4')}</span>
+                </li>
+              </ul>
             </div>
           </div>
 
           {/* Contact Form */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 animate-slide-in-right">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-5">
-              {t('contact.form.title')}
-            </h3>
-            
-            {success && (
-              <div className="mb-5 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm animate-fade-in">
-                {t('contact.form.success')}
-              </div>
-            )}
+          <div>
+            <form onSubmit={handleSubmit(onSubmit)} className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8">
+              <h3 className="text-2xl font-bold mb-6">{t('contact.sendMessage')}</h3>
+              
+              <div className="space-y-6">
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+                    {t('contact.name')} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    {...register('name', { required: t('contact.nameRequired') })}
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                    placeholder={t('contact.namePlaceholder')}
+                  />
+                  {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+                </div>
 
-            {error && (
-              <div className="mb-5 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm animate-fade-in">
-                {error}
-              </div>
-            )}
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+                    {t('contact.email')} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    {...register('email', { 
+                      required: t('contact.emailRequired'),
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: t('contact.emailInvalid')
+                      }
+                    })}
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                    placeholder={t('contact.emailPlaceholder')}
+                  />
+                  {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+                </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('contact.form.name')} *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
-                    errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                  }`}
-                  placeholder={t('contact.form.namePlaceholder')}
-                />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-              </div>
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+                    {t('contact.phone')} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    {...register('phone', { 
+                      required: t('contact.phoneRequired'),
+                      pattern: {
+                        value: /^[0-9]{10}$/,
+                        message: t('contact.phoneInvalid')
+                      }
+                    })}
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                    placeholder={t('contact.phonePlaceholder')}
+                  />
+                  {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('contact.form.email')} *
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
-                    errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                  }`}
-                  placeholder={t('contact.form.emailPlaceholder')}
-                />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-              </div>
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+                    {t('contact.message')} <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    rows="5"
+                    {...register('message', { required: t('contact.messageRequired') })}
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none"
+                    placeholder={t('contact.messagePlaceholder')}
+                  />
+                  {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>}
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('contact.form.phone')}
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
-                    errors.phone ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                  }`}
-                  placeholder={t('contact.form.phonePlaceholder')}
-                />
-                {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-3 transition disabled:opacity-50 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="animate-spin" size={20} />
+                      {t('contact.sending')}
+                    </>
+                  ) : (
+                    <>
+                      <Send size={20} />
+                      {t('contact.submit')}
+                    </>
+                  )}
+                </button>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('contact.form.message')} *
-                </label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={4}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
-                    errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                  }`}
-                  placeholder={t('contact.form.messagePlaceholder')}
-                />
-                {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-3 rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed group"
-              >
-                {loading ? t('contact.form.sending') : t('contact.form.send')}
-                <Send className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
-              </button>
             </form>
           </div>
         </div>

@@ -1,0 +1,169 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Welcome to C.I.D.C.O. Mitra",
+    "subtitle": "Your trusted partner for government services",
+    "tagline": "C.I.D.C.O. Transfer Services Fast and Easy",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "contactUs": "Contact Us"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "We provide you with various government services",
+    "categories": "Service Categories",
+    "viewAll": "View All Services",
+    "viewDetails": "View Details",
+    "bookNow": "Book Now"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "C.I.D.C.O. Mitra is dedicated to making government services accessible to citizens"
+  },
+  "features": {
+    "title": "Features",
+    "subtitle": "We provide you with the best services"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+    "getInTouch": "Get In Touch",
+    "contactInfo": "Contact Information",
+    "sendMessage": "Send us a Message",
+    "name": "Full Name",
+    "namePlaceholder": "Enter your full name",
+    "nameRequired": "Name is required",
+    "email": "Email Address",
+    "emailPlaceholder": "Enter your email address",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email address",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Enter your phone number",
+    "phoneRequired": "Phone is required",
+    "phoneInvalid": "Phone must be 10 digits",
+    "message": "Your Message",
+    "messagePlaceholder": "Tell us how we can help you...",
+    "messageRequired": "Message is required",
+    "submit": "Send Message",
+    "sending": "Sending...",
+    "success": "Your message has been sent successfully!",
+    "error": "Something went wrong. Please try again.",
+    "address": "Address",
+    "hours": "Business Hours",
+    "hoursValue": "Monday - Saturday: 10:00 AM - 6:00 PM",
+    "whyContactUs": "Why Contact Us?",
+    "reason1": "Quick response to your queries",
+    "reason2": "Expert guidance on C.I.D.C.O. services",
+    "reason3": "Personalized assistance for your needs",
+    "reason4": "Transparent and reliable support"
+  },
+  "footer": {
+    "description": "C.I.D.C.O. Mitra - Your trusted partner for government services",
+    "transferServices": "C.I.D.C.O. Transfer Services",
+    "transferTagline": "Now Doorstep, Fast & Easy",
+    "quickLinks": "Quick Links",
+    "ourServices": "Our Services",
+    "followUs": "Follow Us",
+    "rights": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "contactInfo": {
+    "title": "Contact Mobile Number:",
+    "subtitle": "For any other C.I.D.C.O. services, contact us",
+    "scanQR": "Scan QR Code",
+    "qrPlaceholder": "QR Code",
+    "qrInfo": "Scan for quick access",
+    "additionalInfo": "For any other C.I.D.C.O. services, contact us at www.cidcomitra.com"
+  },
+  "stats": {
+    "services": "Services",
+    "users": "Users",
+    "satisfaction": "Satisfaction"
+  },
+  "serviceDetail": {
+    "backToServices": "Back to Services",
+    "notFound": "Service not found",
+    "overview": "Overview",
+    "requiredDocuments": "Required Documents",
+    "processingTime": "Processing Time",
+    "pricing": "Pricing",
+    "getStarted": "Get Started",
+    "contactWhatsApp": "Contact via WhatsApp",
+    "callNow": "Call Now",
+    "bookAppointment": "Book Appointment",
+    "contactInfo": "Contact Information"
+  },
+  "appointment": {
+    "title": "Book an Appointment",
+    "name": "Full Name",
+    "namePlaceholder": "Enter your full name",
+    "email": "Email Address",
+    "emailPlaceholder": "Enter your email",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Enter your phone number",
+    "date": "Appointment Date",
+    "timeSlot": "Select Time Slot",
+    "message": "Message",
+    "optional": "Optional",
+    "messagePlaceholder": "Any additional information...",
+    "noSlots": "No slots available for this date",
+    "submit": "Book Appointment",
+    "submitting": "Booking...",
+    "cancel": "Cancel",
+    "close": "Close",
+    "successTitle": "Appointment Booked!",
+    "successMessage": "Your appointment has been successfully booked. We will contact you shortly.",
+    "errorMessage": "Failed to book appointment. Please try again."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "The page you are looking for doesn't exist or has been moved.",
+    "goHome": "Go Home",
+    "viewServices": "View Services"
+  },
+  "seo": {
+    "homeTitle": "C.I.D.C.O. Mitra - Government Services Made Easy",
+    "homeDescription": "C.I.D.C.O. Mitra provides fast and easy access to government services including property transfers, documentation, and more in Navi Mumbai."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "section1Title": "Information We Collect",
+    "section1Content": "We collect information that you provide directly to us when using our services, including name, email, phone number, and service requests.",
+    "section2Title": "How We Use Your Information",
+    "section2Content": "We use the information we collect to provide, maintain, and improve our services, to process your requests, and to communicate with you.",
+    "section3Title": "Information Sharing",
+    "section3Content": "We do not sell or share your personal information with third parties except as necessary to provide our services or as required by law.",
+    "section4Title": "Contact Us",
+    "section4Content": "If you have any questions about this Privacy Policy, please contact us at cidcomitra@gmail.com."
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "section1Title": "Acceptance of Terms",
+    "section1Content": "By accessing and using C.I.D.C.O. Mitra services, you accept and agree to be bound by the terms and provision of this agreement.",
+    "section2Title": "Use of Services",
+    "section2Content": "You agree to use our services only for lawful purposes and in accordance with these Terms of Service.",
+    "section3Title": "Service Modifications",
+    "section3Content": "We reserve the right to modify or discontinue our services at any time without notice.",
+    "section4Title": "Limitation of Liability",
+    "section4Content": "C.I.D.C.O. Mitra shall not be liable for any indirect, incidental, special, consequential or punitive damages resulting from your use of our services."
+  },
+  "installPrompt": {
+    "title": "Install C.I.D.C.O. Mitra App",
+    "description": "Get quick access to C.I.D.C.O. services. Install our app for a better experience with offline access.",
+    "iosTitle": "How to Install on iPhone/iPad:",
+    "iosStep1": "Tap the Share button",
+    "iosStep2": "Select \"Add to Home Screen\"",
+    "iosStep3": "Tap \"Add\" to install",
+    "benefit1": "Works offline - Access services anytime",
+    "benefit2": "Faster loading - Save data and time",
+    "benefit3": "Home screen access - One tap to open",
+    "install": "Install App",
+    "later": "Maybe Later"
+  }
+}
