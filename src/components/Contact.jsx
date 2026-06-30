@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useLanguage } from '../context/LanguageContext'
 import { publicService } from '../services/publicService'
+import { trackLeadFormConversion } from '../utils/googleAds'
 import { Send, Loader, MapPin, Phone, Mail, Clock, CheckCircle } from 'lucide-react'
 
 export default function Contact() {
@@ -11,6 +12,7 @@ export default function Contact() {
   const onSubmit = async (data) => {
     try {
       await publicService.submitLead(data)
+      trackLeadFormConversion()
       toast.success(t('contact.success'))
       reset()
     } catch (error) {
