@@ -106,7 +106,7 @@ export default function Hero() {
           poster={POSTER}
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/videos/hero-background.mp4" type="video/mp4" />
+          <source src={`${import.meta.env.BASE_URL}videos/hero-background.mp4`} type="video/mp4" />
         </video>
       )}
 

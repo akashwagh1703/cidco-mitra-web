@@ -28,16 +28,22 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: '/icon-192x192.png',
+            src: 'icon-192x192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
           },
           {
-            src: '/icon-512x512.png',
+            src: 'icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: 'icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
       },
@@ -62,6 +68,7 @@ export default defineConfig({
       }
     })
   ],
+  // Site is served from domain root: https://cidcomitra.com/
   base: '/',
   server: {
     port: 3000

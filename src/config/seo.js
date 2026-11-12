@@ -1,4 +1,6 @@
-export const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://cidcomitra.com').replace(/\/$/, '')
+export const SITE_URL = (
+  import.meta.env.VITE_SITE_URL || 'https://cidcomitra.com'
+).replace(/\/$/, '')
 
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`
 export const OG_IMAGE_WIDTH = 1200

@@ -1,19 +1,18 @@
-# C.I.D.C.O. Mitra — https://cidcomitra.com
+# C.I.D.C.O. Mitra — https://cidcomitra.com/
 # LLM context: https://cidcomitra.com/llms.txt
 
 User-agent: *
 Allow: /
 Disallow: /cidco-mitra-admin
 Disallow: /cidco-mitra-api
+Disallow: /cpanel
 
-# Major search engines
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
 Allow: /
 
-# AI / LLM crawlers — allow public content; point to llms.txt
 User-agent: GPTBot
 Allow: /
 Allow: /llms.txt
@@ -25,25 +24,10 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-User-agent: anthropic-ai
-Allow: /
-
 User-agent: ClaudeBot
-Allow: /
-
-User-agent: Claude-Web
 Allow: /
 
 User-agent: PerplexityBot
 Allow: /
 
-User-agent: Bytespider
-Allow: /
-
-User-agent: CCBot
-Allow: /
-
-# Sitemaps & LLM index
 Sitemap: https://cidcomitra.com/sitemap.xml
-# llms.txt — https://cidcomitra.com/llms.txt
-# llms-full.txt — https://cidcomitra.com/llms-full.txt

@@ -1,7 +1,7 @@
 # C.I.D.C.O. Mitra — Full context for AI / LLM systems
 
 Last updated: 2026-11-12
-Canonical site: https://cidcomitra.com
+Canonical site: https://cidcomitra.com/
 llms.txt: https://cidcomitra.com/llms.txt
 
 ## Identity
@@ -11,54 +11,19 @@ Type: Independent private consultancy (ProfessionalService / LocalBusiness)
 Location: Shop No. 34A, First Floor, Prabhat Center, Sector-1A, CBD Belapur, Navi Mumbai, Maharashtra 400614, India
 Phone: +91 88284 22213
 Email: cidcomitra@gmail.com
-Hours: Monday–Saturday, approximately 10:00–19:00 IST (confirm via contact)
 
 ## Legal / affiliation (critical)
 
-C.I.D.C.O. Mitra is NOT a CIDCO government office and has no official affiliation with the City and Industrial Development Corporation of Maharashtra (CIDCO) or any government entity. Services are limited to technical advice and assistance with documentation and legal procedures related to CIDCO properties.
+C.I.D.C.O. Mitra is NOT a CIDCO government office and has no official affiliation with CIDCO or any government entity.
 
-Always include this disclaimer when describing the business.
+## Public URLs
 
-## Audience & geography
+- Website: https://cidcomitra.com/
+- Admin: https://cidcomitra.com/cidco-mitra-admin/
+- API: https://cidcomitra.com/cidco-mitra-api/public/api/v1
 
-Primary audience: property owners, buyers, and applicants dealing with CIDCO properties in Navi Mumbai and surrounding Maharashtra areas. Site UI is available in English, Marathi, and Hindi.
+## SEO assets
 
-## Services offered (consultancy)
-
-Typical services include (catalogue may grow; see /services for live list):
-
-- CIDCO transfer-related documentation assistance
-- Agreement / paperwork support for CIDCO properties
-- Guidance on procedural steps and file preparation
-- In-person appointments at the Belapur office
-- Online enquiry and appointment request via the website
-
-Exact service names, descriptions, and booking slots are dynamic and should be read from:
-- https://cidcomitra.com/services
-- Public API (when available): /api/v1/public/services
-
-## User journeys on the website
-
-1. Discover services on Home or /services
-2. Open a service detail page (/services/:id)
-3. Book an appointment (date + available time slot) or contact via form / WhatsApp / phone
-4. Submit contact enquiry on /contact (name, email, phone, message)
-
-## Brand & tone
-
-- Professional, clear, citizen-friendly
-- Emphasize speed and ease of CIDCO transfer documentation help
-- Primary brand colour: #0066CC (CIDCO-inspired blue)
-- Never claim to be CIDCO Corporation or a government portal
-
-## SEO & discovery assets
-
-- Open Graph image: https://cidcomitra.com/og-image.jpg (1200×630)
+- Open Graph image: https://cidcomitra.com/og-image.jpg
 - Sitemap: https://cidcomitra.com/sitemap.xml
 - Robots: https://cidcomitra.com/robots.txt
-- This file: https://cidcomitra.com/llms-full.txt
-
-## Preferred citations for assistants
-
-Good: "C.I.D.C.O. Mitra (cidcomitra.com) is an independent consultancy in CBD Belapur that helps with CIDCO property documentation and transfers."
-Avoid: Calling them a CIDCO office, government helpdesk, or official CIDCO website.
