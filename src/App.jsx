@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
+import { SettingsProvider } from './context/SettingsContext'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import InstallPrompt from './components/InstallPrompt'
@@ -26,32 +27,34 @@ function ScrollToTop() {
 function App() {
   return (
     <LanguageProvider>
-      <BrowserRouter 
-        basename="/"
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true
-        }}
-      >
-        <ScrollToTop />
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/services/:id" element={<ServiceDetail />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-          <InstallPrompt />
-        </div>
-      </BrowserRouter>
+      <SettingsProvider>
+        <BrowserRouter
+          basename="/"
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true
+          }}
+        >
+          <ScrollToTop />
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/services/:id" element={<ServiceDetail />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+            <InstallPrompt />
+          </div>
+        </BrowserRouter>
+      </SettingsProvider>
     </LanguageProvider>
   )
 }

@@ -1,20 +1,54 @@
 import Contact from '../components/Contact'
+import SEO from '../components/SEO'
 import { MapPin, Phone, Mail } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
+import { useSettings } from '../context/SettingsContext'
+import { normalizeTenDigitPhone, FALLBACK_PHONE } from '../utils/phone'
+
+const FALLBACK_ADDRESS =
+  'Shop No. 34A, First Floor, Prabhat Center, Sector-1A, CBD Belapur, Navi Mumbai 400614'
+const FALLBACK_EMAIL = 'cidcomitra@gmail.com'
 
 export default function ContactPage() {
+  const { t } = useLanguage()
+  const { settings } = useSettings()
+  const general = settings?.general || {}
+
   const contactInfo = [
-    { icon: MapPin, title: 'Address', value: 'Shop No. 34A, First Floor, Prabhat Center, Sector-1A, CBD Belapur, Navi Mumbai 400614' },
-    { icon: Phone, title: 'Phone', value: '8828422213' },
-    { icon: Mail, title: 'Email', value: 'cidcomitra@gmail.com' }
+    {
+      icon: MapPin,
+      title: t('contact.address'),
+      value: general.address || FALLBACK_ADDRESS,
+    },
+    {
+      icon: Phone,
+      title: t('contact.phone'),
+      value: normalizeTenDigitPhone(general.contact_phone, FALLBACK_PHONE),
+    },
+    {
+      icon: Mail,
+      title: t('contact.email'),
+      value: general.contact_email || FALLBACK_EMAIL,
+    },
   ]
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title={t('seo.contactTitle')}
+        description={t('seo.contactDescription')}
+        path="/contact"
+        includeBusinessSchema
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Contact', path: '/contact' },
+        ]}
+      />
       <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">Contact Us</h1>
+          <h1 className="text-5xl font-bold mb-6">{t('contact.title')}</h1>
           <p className="text-xl max-w-2xl mx-auto">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            {t('contact.subtitle')}
           </p>
         </div>
       </section>

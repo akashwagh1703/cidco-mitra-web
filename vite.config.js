@@ -7,7 +7,15 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      includeAssets: [
+        'favicon.ico',
+        'robots.txt',
+        'apple-touch-icon.png',
+        'og-image.jpg',
+        'sitemap.xml',
+        'llms.txt',
+        'llms-full.txt',
+      ],
       manifest: {
         name: 'CIDCO Mitra - Government Services',
         short_name: 'CIDCO Mitra',

@@ -36,12 +36,13 @@ export default function Footer() {
     { path: '/contact', label: t('nav.contact') }
   ]
 
+  // Only render real social URLs; hide placeholders
   const socialLinks = [
-    { icon: Facebook, href: '#' },
-    { icon: Twitter, href: '#' },
-    { icon: Instagram, href: '#' },
-    { icon: Linkedin, href: '#' }
-  ]
+    { icon: Facebook, href: import.meta.env.VITE_SOCIAL_FACEBOOK || '' },
+    { icon: Twitter, href: import.meta.env.VITE_SOCIAL_TWITTER || '' },
+    { icon: Instagram, href: import.meta.env.VITE_SOCIAL_INSTAGRAM || '' },
+    { icon: Linkedin, href: import.meta.env.VITE_SOCIAL_LINKEDIN || '' }
+  ].filter((social) => social.href && social.href !== '#')
 
   return (
     <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-white py-12 pb-20 md:pb-12">
@@ -91,22 +92,24 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h4 className="text-lg font-semibold mb-4">{t('footer.followUs')}</h4>
-            <div className="flex space-x-4">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.href}
-                  className="text-gray-400 hover:text-primary transition"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <social.icon size={24} />
-                </a>
-              ))}
+          {socialLinks.length > 0 && (
+            <div>
+              <h4 className="text-lg font-semibold mb-4">{t('footer.followUs')}</h4>
+              <div className="flex space-x-4">
+                {socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.href}
+                    className="text-gray-400 hover:text-primary transition"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <social.icon size={24} />
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Mobile Accordion Style */}
@@ -150,23 +153,24 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Social */}
-          <div className="bg-gray-800/50 rounded-lg p-4">
-            <h4 className="text-base font-semibold mb-3">{t('footer.followUs')}</h4>
-            <div className="flex space-x-4">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.href}
-                  className="w-10 h-10 bg-gray-700 hover:bg-primary rounded-full flex items-center justify-center transition"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <social.icon size={20} />
-                </a>
-              ))}
+          {socialLinks.length > 0 && (
+            <div className="bg-gray-800/50 rounded-lg p-4">
+              <h4 className="text-base font-semibold mb-3">{t('footer.followUs')}</h4>
+              <div className="flex space-x-4">
+                {socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.href}
+                    className="w-10 h-10 bg-gray-700 hover:bg-primary rounded-full flex items-center justify-center transition"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <social.icon size={20} />
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="border-t border-gray-800 pt-8 text-center text-gray-400">

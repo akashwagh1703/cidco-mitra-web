@@ -1,17 +1,36 @@
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useLanguage } from '../context/LanguageContext'
+import { useSettings } from '../context/SettingsContext'
 import { publicService } from '../services/publicService'
 import { trackLeadFormConversion } from '../utils/googleAds'
+import { telHref, normalizeTenDigitPhone, FALLBACK_PHONE } from '../utils/phone'
 import { Send, Loader, MapPin, Phone, Mail, Clock, CheckCircle } from 'lucide-react'
+
+const FALLBACK_ADDRESS =
+  'Shop No. 34A, First Floor, Prabhat Center, Sector-1A, CBD Belapur, Navi Mumbai 400614'
+const FALLBACK_EMAIL = 'cidcomitra@gmail.com'
 
 export default function Contact() {
   const { t } = useLanguage()
+  const { settings } = useSettings()
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
 
+  const general = settings?.general || {}
+  const address = general.address || FALLBACK_ADDRESS
+  const phone = normalizeTenDigitPhone(general.contact_phone, FALLBACK_PHONE)
+  const email = general.contact_email || FALLBACK_EMAIL
+
   const onSubmit = async (data) => {
+    if (data.website) {
+      reset()
+      toast.success(t('contact.success'))
+      return
+    }
+
     try {
-      await publicService.submitLead(data)
+      const { website, ...payload } = data
+      await publicService.submitLead(payload)
       trackLeadFormConversion()
       toast.success(t('contact.success'))
       reset()
@@ -24,20 +43,20 @@ export default function Contact() {
     {
       icon: MapPin,
       title: t('contact.address'),
-      value: 'Shop No. 34A, First Floor, Prabhat Center, Sector-1A, CBD Belapur, Navi Mumbai 400614',
+      value: address,
       link: null
     },
     {
       icon: Phone,
       title: t('contact.phone'),
-      value: '8828422213',
-      link: 'tel:8828422213'
+      value: phone,
+      link: telHref(phone)
     },
     {
       icon: Mail,
       title: t('contact.email'),
-      value: 'cidcomitra@gmail.com',
-      link: 'mailto:cidcomitra@gmail.com'
+      value: email,
+      link: `mailto:${email}`
     },
     {
       icon: Clock,
@@ -50,7 +69,6 @@ export default function Contact() {
   return (
     <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
       <div className="container mx-auto px-4">
-        {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-block bg-primary/10 rounded-lg px-6 py-2 mb-4">
             <p className="text-primary font-semibold text-sm uppercase tracking-wide">
@@ -64,7 +82,6 @@ export default function Contact() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Contact Information */}
           <div>
             <div className="bg-gradient-to-br from-primary to-secondary rounded-2xl p-8 text-white mb-8 shadow-xl">
               <h3 className="text-2xl font-bold mb-6">{t('contact.contactInfo')}</h3>
@@ -92,7 +109,6 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Map or Additional Info */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg">
               <h3 className="text-xl font-bold mb-4">{t('contact.whyContactUs')}</h3>
               <ul className="space-y-3">
@@ -116,11 +132,31 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Contact Form */}
           <div>
             <form onSubmit={handleSubmit(onSubmit)} className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8">
               <h3 className="text-2xl font-bold mb-6">{t('contact.sendMessage')}</h3>
-              
+
+              {/* Honeypot */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  left: '-9999px',
+                  height: 0,
+                  overflow: 'hidden',
+                  opacity: 0,
+                }}
+              >
+                <label htmlFor="contact-website">Website</label>
+                <input
+                  id="contact-website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  {...register('website')}
+                />
+              </div>
+
               <div className="space-y-6">
                 <div>
                   <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
@@ -141,7 +177,7 @@ export default function Contact() {
                   </label>
                   <input
                     type="email"
-                    {...register('email', { 
+                    {...register('email', {
                       required: t('contact.emailRequired'),
                       pattern: {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -160,11 +196,19 @@ export default function Contact() {
                   </label>
                   <input
                     type="tel"
-                    {...register('phone', { 
+                    inputMode="numeric"
+                    maxLength={10}
+                    minLength={10}
+                    {...register('phone', {
                       required: t('contact.phoneRequired'),
+                      minLength: { value: 10, message: t('contact.phoneInvalid') },
+                      maxLength: { value: 10, message: t('contact.phoneInvalid') },
                       pattern: {
                         value: /^[0-9]{10}$/,
                         message: t('contact.phoneInvalid')
+                      },
+                      onChange: (e) => {
+                        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10)
                       }
                     })}
                     className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"

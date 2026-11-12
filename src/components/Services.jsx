@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, Loader, Home, FileText, Building2, UserPlus, RefreshCw, FileX, Gift, LandPlot } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ArrowRight, Loader, Home, FileText, Building2, UserPlus, RefreshCw, FileX, Gift, LandPlot, Calendar } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import { publicService } from '../services/publicService'
 import AppointmentBooking from './AppointmentBooking'
 
 export default function Services() {
   const { t, language } = useLanguage()
+  const navigate = useNavigate()
   const [services, setServices] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedService, setSelectedService] = useState(null)
@@ -35,14 +36,14 @@ export default function Services() {
     return localized || ''
   }
 
-  // Icon mapping based on service type
   const getServiceIcon = (index) => {
     const icons = [Home, Gift, Building2, UserPlus, RefreshCw, FileText, FileX, LandPlot]
-    const IconComponent = icons[index % icons.length]
-    return IconComponent
+    return icons[index % icons.length]
   }
 
-  const handleBookAppointment = (service) => {
+  const handleBookAppointment = (service, e) => {
+    e.preventDefault()
+    e.stopPropagation()
     setSelectedService(service)
     setShowBooking(true)
   }
@@ -60,7 +61,6 @@ export default function Services() {
   return (
     <section className="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-800 dark:text-white">
             {t('services.title')}
@@ -70,21 +70,26 @@ export default function Services() {
           </p>
         </div>
 
-        {/* Big Card Container */}
         <div className="max-w-7xl mx-auto">
           <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-200 dark:border-gray-700">
-            {/* Services Grid - Compact Design */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {services.map((service, index) => {
                 const IconComponent = getServiceIcon(index)
                 return (
-                  <div 
-                    key={service.id} 
-                    onClick={() => handleBookAppointment(service)}
+                  <div
+                    key={service.id}
+                    role="link"
+                    tabIndex={0}
+                    onClick={() => navigate(`/services/${service.id}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        navigate(`/services/${service.id}`)
+                      }
+                    }}
                     className="group cursor-pointer"
                   >
                     <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-primary hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-4">
-                      {/* Icon */}
                       <div className="flex-shrink-0">
                         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
                           {service.icon_url ? (
@@ -92,6 +97,7 @@ export default function Services() {
                               src={service.icon_url}
                               alt={getLocalizedText(service, 'title')}
                               className="w-8 h-8"
+                              loading="lazy"
                             />
                           ) : (
                             <IconComponent className="text-white" size={28} />
@@ -99,34 +105,32 @@ export default function Services() {
                         </div>
                       </div>
 
-                      {/* Content */}
                       <div className="flex-1 min-w-0">
-                        {/* Service Title */}
                         <h3 className="text-base font-bold mb-1 text-gray-800 dark:text-white group-hover:text-primary transition-colors">
                           {getLocalizedText(service, 'title')}
                         </h3>
-
-                        {/* Service Description */}
-                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 md:line-clamp-2">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
                           {getLocalizedText(service, 'description')}
                         </p>
                       </div>
 
-                      {/* Arrow Icon */}
-                      <Link
-                        to={`/services/${service.id}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex-shrink-0"
-                      >
+                      <div className="flex-shrink-0 flex flex-col items-end gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => handleBookAppointment(service, e)}
+                          className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition shadow-sm"
+                        >
+                          <Calendar size={14} />
+                          {t('services.bookNow')}
+                        </button>
                         <ArrowRight size={20} className="text-primary group-hover:translate-x-1 transition-transform" />
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 )
               })}
             </div>
 
-            {/* View All Button */}
             {services.length > 0 && (
               <div className="text-center mt-8">
                 <Link
@@ -142,7 +146,6 @@ export default function Services() {
         </div>
       </div>
 
-      {/* Appointment Booking Modal */}
       {showBooking && selectedService && (
         <AppointmentBooking
           service={selectedService}

@@ -1,0 +1,5 @@
+# Alias for AI / LLM crawlers
+# Prefer: https://cidcomitra.com/llms.txt
+# Full context: https://cidcomitra.com/llms-full.txt
+
+See: /llms.txt

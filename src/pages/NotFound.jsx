@@ -1,12 +1,19 @@
 import { Link } from 'react-router-dom'
 import { Home, Search } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import SEO from '../components/SEO'
 
 export default function NotFound() {
   const { t } = useLanguage()
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 px-4">
+      <SEO
+        title={t('seo.notFoundTitle')}
+        description={t('seo.notFoundDescription')}
+        path="/404"
+        noindex
+      />
       <div className="text-center max-w-lg">
         <div className="mb-8">
           <h1 className="text-9xl font-bold text-primary mb-4">404</h1>

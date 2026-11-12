@@ -12,6 +12,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
+import { useSettings } from "../context/SettingsContext";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +21,9 @@ export default function Header() {
   );
   const [showLangMenu, setShowLangMenu] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const { settings } = useSettings();
   const location = useLocation();
+  const siteName = settings?.general?.site_name || "C.I.D.C.O. MITRA";
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
@@ -48,9 +51,8 @@ export default function Header() {
             <Link to="/" className="flex items-center gap-3">
               <div className="text-white">
                 <h1 className="text-xl md:text-2xl font-bold leading-tight">
-                  C.I.D.C.O. MITRA
+                  {siteName}
                 </h1>
-                {/* <p className="text-xs md:text-sm font-semibold opacity-90">C.I.D.C.O. MITRA</p> */}
               </div>
             </Link>
 

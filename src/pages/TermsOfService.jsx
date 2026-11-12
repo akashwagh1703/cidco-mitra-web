@@ -1,4 +1,5 @@
 import { useLanguage } from '../context/LanguageContext'
+import SEO from '../components/SEO'
 import { FileText } from 'lucide-react'
 
 export default function TermsOfService() {
@@ -6,16 +7,25 @@ export default function TermsOfService() {
 
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-800">
+      <SEO
+        title={t('seo.termsTitle')}
+        description={t('seo.termsDescription')}
+        path="/terms-of-service"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Terms of Service', path: '/terms-of-service' },
+        ]}
+      />
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8 md:p-12">
           <div className="flex items-center gap-4 mb-8">
             <FileText className="w-12 h-12 text-primary" />
             <h1 className="text-4xl font-bold">{t('terms.title')}</h1>
           </div>
-          
+
           <div className="prose dark:prose-invert max-w-none">
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Last updated: {new Date().toLocaleDateString()}
+              {t('terms.lastUpdated')}: 12 November 2025
             </p>
 
             <section className="mb-8">
